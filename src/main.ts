@@ -18,44 +18,44 @@ let score = 0;
 diffEasyBtn.addEventListener("click", () => {
   easy = true;
   console.log(easy)
-  setMode()
+  setDifficultyAndLanguage()
 });
 
 diffHardBtn.addEventListener("click", () => {
   easy = false;
-  setMode()
+  setDifficultyAndLanguage()
 });
 
 langEnBtn.addEventListener("click", () => {
   english = true;
-  setMode()
+  setDifficultyAndLanguage()
 });
 
 langDeBtn.addEventListener("click", () => {
   english = false;
-  setMode()
+  setDifficultyAndLanguage()
 });
 
-function setMode(){
+function setDifficultyAndLanguage(){
 if (easy === true && english === true){
-  startQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/easy.json");
+  fetchDataAndStartQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/easy.json");
   outputArea.innerHTML = "";
   outputArea.innerHTML = "Lets go easy"
 } else if(easy === true && english === false){
-  startQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/leicht.json");
+  fetchDataAndStartQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/leicht.json");
   outputArea.innerHTML = "";
   outputArea.innerHTML = "Los gehts"
 } else if (easy === false && english === true){
-  startQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/hard.json");
+  fetchDataAndStartQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/hard.json");
   outputArea.innerHTML = "";
   outputArea.innerHTML = "Lets go hard"
 } else if (easy === false && english === false) {
-  startQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/schwer.json");
+  fetchDataAndStartQuiz("https://vz-wd-24-01.github.io/typescript-quiz/questions/schwer.json");
   outputArea.innerHTML = "";
   outputArea.innerHTML = "Los gehts großer"
 }
 }
-function startQuiz(fetchUrl:string){
+function fetchDataAndStartQuiz(fetchUrl:string){
 
 fetch(fetchUrl)
 .then((response: Response) => {
@@ -69,7 +69,7 @@ fetch(fetchUrl)
   let quizAll: IQuizAll[] = response;
   console.log(quizAll);
   startBtn.addEventListener("click", () => {
-    testSingleQuestion(quizAll);
+    generateAndEvaluateQuestionsAndAnswers(quizAll);
   })
   return quizAll
 })
@@ -82,8 +82,9 @@ fetch(fetchUrl)
 
 }
 
-function testSingleQuestion (quizAll:IQuizAll[]){
+function generateAndEvaluateQuestionsAndAnswers (quizAll:IQuizAll[]){
 
+  startBtn.classList.add("remove");
   diffEasyBtn.classList.add("remove");
   diffHardBtn.classList.add("remove");
   langEnBtn.classList.add("remove");
@@ -107,8 +108,6 @@ function testSingleQuestion (quizAll:IQuizAll[]){
   `
   let answerWrapper = outputArea.appendChild(document.createElement("div"));
   let quizAnswers = quizAll[counter].answers;
-
-  console.log(quizAnswers);
 
   answerWrapper.className = "answer-wrapper";
 
@@ -155,7 +154,7 @@ function testSingleQuestion (quizAll:IQuizAll[]){
         let nextBtn = outputArea.appendChild(document.createElement("button"));
         nextBtn.innerHTML = "Next";
         nextBtn.addEventListener("click", () =>{
-          testSingleQuestion(quizAll);
+          generateAndEvaluateQuestionsAndAnswers(quizAll);
         });
       }
 }
